@@ -20,6 +20,7 @@ pub struct Backend {
     api_key: Option<String>,
     model: String,
     max_tokens: u32,
+    effort: Option<String>,
 }
 
 impl Backend {
@@ -47,6 +48,7 @@ impl Backend {
             api_key,
             model: p.model.clone(),
             max_tokens: p.max_tokens.unwrap_or(DEFAULT_MAX_TOKENS),
+            effort: p.effort.clone(),
         })
     }
 
@@ -59,7 +61,7 @@ impl Backend {
     }
 
     async fn chat_openai(&self, system: &str, user: &str) -> Res<String> {
-        let body = json!({
+        let mut body = json!({
             "model": self.model,
             "max_tokens": self.max_tokens,
             "messages": [
@@ -67,6 +69,9 @@ impl Backend {
                 { "role": "user", "content": user },
             ],
         });
+        if let Some(effort) = &self.effort {
+            body["reasoning_effort"] = json!(effort);
+        }
         let mut request = self
             .http
             .post(format!("{}/chat/completions", self.base_url))
@@ -83,12 +88,15 @@ impl Backend {
     }
 
     async fn chat_anthropic(&self, system: &str, user: &str) -> Res<String> {
-        let body = json!({
+        let mut body = json!({
             "model": self.model,
             "max_tokens": self.max_tokens,
             "system": system,
             "messages": [{ "role": "user", "content": user }],
         });
+        if let Some(effort) = &self.effort {
+            body["output_config"] = json!({ "effort": effort });
+        }
         let mut request = self
             .http
             .post(format!("{}/messages", self.base_url))

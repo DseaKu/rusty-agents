@@ -28,6 +28,9 @@ pub struct ProviderConfig {
     pub api_key_env: Option<String>,
     /// Upper limit for the length of each reply.
     pub max_tokens: Option<u32>,
+    /// How much the model thinks before it replies (for example `low`, `medium`, `high`).
+    /// Sent as `output_config.effort` (anthropic) or `reasoning_effort` (openai, ollama).
+    pub effort: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
@@ -68,6 +71,7 @@ impl Default for Config {
             base_url: None,
             api_key_env: None,
             max_tokens: None,
+            effort: None,
         };
         Self {
             active: "local".to_string(),

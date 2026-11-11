@@ -7,6 +7,9 @@ active: claude
 #   base_url     - API address (each type has a default)
 #   api_key_env  - environment variable that holds the token (set it in your shell or .env)
 #   max_tokens   - upper limit for each reply (default 4096)
+#   effort       - how much the model thinks before it replies (default: the model's own default)
+#                  anthropic: low | medium | high | xhigh | max
+#                  openai/ollama: sent as reasoning_effort (only reasoning models accept it)
 #
 # Types: ollama (local, no token), openai (any OpenAI-compatible API), anthropic (Claude).
 providers:
@@ -17,6 +20,7 @@ providers:
   claude:
     type: anthropic
     model: claude-haiku-5-5
+    effort: medium
     # model: claude-sonnet-5-5
 
   openai:
