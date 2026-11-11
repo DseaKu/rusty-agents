@@ -1,32 +1,20 @@
-use ollama_rs::{
-    Ollama,
-    generation::chat::{ChatMessage, request::ChatMessageRequest},
-};
-
 use crate::Res;
-
-const MODEL: &str = "qwen3:1.7b";
+use crate::backend::Backend;
 
 /// An LLM agent defined solely by its role (system prompt).
 pub struct Agent<'a> {
-    ollama: &'a Ollama,
+    backend: &'a Backend,
     role: &'a str,
 }
 
 impl<'a> Agent<'a> {
-    pub fn new(ollama: &'a Ollama, role: &'a str) -> Self {
-        Self { ollama, role }
+    pub fn new(backend: &'a Backend, role: &'a str) -> Self {
+        Self { backend, role }
     }
 
     pub async fn run(&self, task: &str, context: &str) -> Res<String> {
-        let request = ChatMessageRequest::new(
-            MODEL.to_string(),
-            vec![
-                ChatMessage::system(self.role.to_string()),
-                ChatMessage::user(format!("{context}\n\nTask: {task}")),
-            ],
-        );
-        let response = self.ollama.send_chat_messages(request).await?;
-        Ok(response.message.content)
+        self.backend
+            .chat(self.role, &format!("{context}\n\nTask: {task}"))
+            .await
     }
 }

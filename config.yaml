@@ -1,0 +1,31 @@
+# Agent settings. Set AGENTS_CONFIG to use a different file.
+
+# The provider entry to use. To switch, change this one line,
+# or run with AGENTS_PROVIDER=<name> to override it once.
+active: local
+
+# Each entry needs a `type` and a `model`. Optional fields:
+#   base_url     - API address (each type has a default)
+#   api_key_env  - environment variable that holds the token (set it in your shell or .env)
+#   max_tokens   - upper limit for each reply (default 4096)
+#
+# Types: ollama (local, no token), openai (any OpenAI-compatible API), anthropic (Claude).
+providers:
+  local:
+    type: ollama
+    model: qwen3:1.7b
+
+  claude:
+    type: anthropic
+    model: claude-haiku-5-5
+    # model: claude-sonnet-5-5
+
+  openai:
+    type: openai
+    model: gpt-4o-mini
+
+  openrouter:
+    type: openai
+    model: meta-llama/llama-3.3-70b-instruct
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY

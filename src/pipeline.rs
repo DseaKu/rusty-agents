@@ -1,4 +1,4 @@
-use ollama_rs::Ollama;
+use crate::backend::Backend;
 
 use crate::Res;
 use crate::agent::Agent;
@@ -9,11 +9,11 @@ const REVIEWER: &str = "You are a code reviewer. Find bugs and suggest improveme
 const OUTPUT_REVIEWER: &str = "You are an output reviewer. Check whether the code fulfills the task.";
 
 /// Runs the plan → code → review → output-check pipeline, printing each agent's result.
-pub async fn run(ollama: &Ollama, task: &str, input: &str) -> Res<()> {
-    let planner = Agent::new(ollama, PLANNER);
-    let developer = Agent::new(ollama, DEVELOPER);
-    let reviewer = Agent::new(ollama, REVIEWER);
-    let output_reviewer = Agent::new(ollama, OUTPUT_REVIEWER);
+pub async fn run(backend: &Backend, task: &str, input: &str) -> Res<()> {
+    let planner = Agent::new(backend, PLANNER);
+    let developer = Agent::new(backend, DEVELOPER);
+    let reviewer = Agent::new(backend, REVIEWER);
+    let output_reviewer = Agent::new(backend, OUTPUT_REVIEWER);
 
     let plan = planner.run(task, input).await?;
     println!("\n\nPlanner agent:\n{plan}");
