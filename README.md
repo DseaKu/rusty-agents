@@ -6,14 +6,13 @@ The example pipeline runs a planner, a developer, a code reviewer, and an output
 ## Run
 
 ```sh
-cargo run -- "write a function that adds two numbers"
-cat src/main.rs | cargo run -- "review this code"
+cargo run "write a function that adds two numbers"
+cat src/main.rs | cargo run "review this code"
 ```
 
 ## Providers
 
-Select the provider with `active` in `config.yaml` (`local`, `claude`, `openai`, ...),
-or for one run with `AGENTS_PROVIDER=claude cargo run -- "..."`.
+Select the provider with `active` in `config.yaml` (`local`, `claude`, `openai`, ...).
 
 Supported types: `ollama` (local), `anthropic`, and `openai` (any OpenAI-compatible API).
 

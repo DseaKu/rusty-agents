@@ -10,7 +10,7 @@ const DEFAULT_CONFIG_PATH: &str = "config.yaml";
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    /// Name of the provider entry to use. `AGENTS_PROVIDER` overrides it.
+    /// Name of the provider entry to use.
     pub active: String,
     /// Named provider entries. Add as many as you like.
     pub providers: BTreeMap<String, ProviderConfig>,
@@ -84,19 +84,12 @@ impl Config {
             _ => (DEFAULT_CONFIG_PATH.to_string(), false),
         };
 
-        let mut config: Self = if !explicit && !Path::new(&path).exists() {
-            Self::default()
-        } else {
-            let text =
-                fs::read_to_string(&path).map_err(|e| format!("cannot read {path}: {e}"))?;
-            serde_yaml::from_str(&text).map_err(|e| format!("invalid {path}: {e}"))?
-        };
-
-        if let Ok(name) = env::var("AGENTS_PROVIDER")
-            && !name.trim().is_empty()
-        {
-            config.active = name.trim().to_string();
+        if !explicit && !Path::new(&path).exists() {
+            return Ok(Self::default());
         }
+
+        let text = fs::read_to_string(&path).map_err(|e| format!("cannot read {path}: {e}"))?;
+        let config = serde_yaml::from_str(&text).map_err(|e| format!("invalid {path}: {e}"))?;
         Ok(config)
     }
 

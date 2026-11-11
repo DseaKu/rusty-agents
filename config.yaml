@@ -1,8 +1,7 @@
 # Agent settings. Set AGENTS_CONFIG to use a different file.
 
-# The provider entry to use. To switch, change this one line,
-# or run with AGENTS_PROVIDER=<name> to override it once.
-active: local
+# The provider entry to use. To switch, change this one line.
+active: claude
 
 # Each entry needs a `type` and a `model`. Optional fields:
 #   base_url     - API address (each type has a default)
