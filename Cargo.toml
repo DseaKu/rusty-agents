@@ -1,0 +1,8 @@
+[package]
+name = "rusty_agents"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ollama-rs = "0.3.6"
+tokio = { version = "1.54.1", features = ["full"] }
